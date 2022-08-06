@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import AddMovie from './components/AddMovie';
 import MoviesList from './components/MoviesList';
 import './App.css';
 
@@ -13,7 +13,7 @@ function App() {
       setIsLoading(true);
       serError(null)
       try {
-        const res = await fetch('https://swapi.dev/api/film/')
+        const res = await fetch('https://swapi.dev/api/films/')
         if (!res.ok) {
           throw new Error('Something went wrong! retrying..please wait for few minutes');
           
@@ -53,7 +53,7 @@ function App() {
   return (
     <React.Fragment>
       <section>
-        <button>Fetch Movies</button>
+      <AddMovie  />
       </section>
       <section>
         {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
