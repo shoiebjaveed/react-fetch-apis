@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import MoviesList from './components/MoviesList';
 import './App.css';
@@ -8,47 +8,52 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, serError] = useState(null);
   const [cancel, setCancel] = useState(false)
-
-  const fetchMoviesHandler = async () => {
-    setIsLoading(true);
-    serError(null)
-    try {
-      const res = await fetch('https://swapi.dev/api/film/')
-      if (!res.ok) {
-        throw new Error('Something went wrong! retrying..please wait for few minutes');
-        
-      }
-      <button>retrying</button>
-
-    const data = await res.json()
-
-      const transformedMovies = data.results.map(movieData => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releseDate: movieData.relese_data
+  useEffect(() => {
+    const fetchMoviesHandler = async () => {
+      setIsLoading(true);
+      serError(null)
+      try {
+        const res = await fetch('https://swapi.dev/api/film/')
+        if (!res.ok) {
+          throw new Error('Something went wrong! retrying..please wait for few minutes');
+          
         }
-      })
-      setMovies(transformedMovies);
-
-    }
-    catch (error){
-      serError(error.message);
-    }
-    setIsLoading(false)
-    
-  }
+        <button>retrying</button>
   
+      const data = await res.json()
+  
+        const transformedMovies = data.results.map(movieData => {
+          return {
+            id: movieData.episode_id,
+            title: movieData.title,
+            openingText: movieData.opening_crawl,
+            releseDate: movieData.relese_data
+          }
+        })
+        setMovies(transformedMovies);
+  
+      }
+      catch (error){
+        serError(error.message);
+      }
+      setIsLoading(false)
+      
+    }
+    
+    fetchMoviesHandler()
+  }, [])
+
   const cancelRetry = ()=> {
     setCancel(true);
     setIsLoading(false)
   }
 
+  
+
   return (
     <React.Fragment>
       <section>
-        <button onClick={fetchMoviesHandler}>Fetch Movies</button>
+        <button>Fetch Movies</button>
       </section>
       <section>
         {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}
