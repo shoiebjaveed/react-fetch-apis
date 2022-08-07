@@ -13,7 +13,7 @@ function App() {
       setIsLoading(true);
       serError(null)
       try {
-        const res = await fetch('https://swapi.dev/api/films/')
+        const res = await fetch('https://react-fetch-movies-30c1d-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json')
         if (!res.ok) {
           throw new Error('Something went wrong! retrying..please wait for few minutes');
           
@@ -21,16 +21,20 @@ function App() {
         <button>retrying</button>
   
       const data = await res.json()
-  
-        const transformedMovies = data.results.map(movieData => {
-          return {
-            id: movieData.episode_id,
-            title: movieData.title,
-            openingText: movieData.opening_crawl,
-            releseDate: movieData.relese_data
-          }
+      console.log(data)
+
+      const loadedMovies = [];
+
+      for( const key in data) {
+        loadedMovies.push({
+          id: key,
+          title: data[key].title,
+          openingText: data[key].openingText,
+          releseDate: data[key].releseDate
         })
-        setMovies(transformedMovies);
+      }
+
+        setMovies(loadedMovies);
   
       }
       catch (error){
@@ -48,12 +52,26 @@ function App() {
     setIsLoading(false)
   }
 
+  const addMoviesHandler = async (movie) => {
+    const res = await fetch('https://react-fetch-movies-30c1d-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json', {
+      method: 'POST',
+      body: JSON.stringify(movie),
+      headers: {
+        'Content-type': 'application/json'
+      }
+    })
+    const data = await res.json();
+    console.log(data)
+  }
+
+  
+
   
 
   return (
     <React.Fragment>
       <section>
-      <AddMovie  />
+      <AddMovie onLoad={addMoviesHandler} />
       </section>
       <section>
         {!isLoading && movies.length > 0 && <MoviesList movies={movies} />}

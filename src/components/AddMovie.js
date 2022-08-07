@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 
 import classes from './AddMovie.module.css';
 
-function AddMovie() {
+function AddMovie(props) {
   const titleRef = useRef('');
   const openingTextRef = useRef('');
   const releaseDateRef = useRef('');
@@ -16,7 +16,7 @@ function AddMovie() {
       releaseDate: releaseDateRef.current.value,
     };
 
-    console.log(movie)
+    props.onLoad(movie)
   }
 
   return (
